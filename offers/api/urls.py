@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import OfferList, OfferDetailView, OfferDetailList
+from . import views
 
 urlpatterns = [
-    path('offers/', OfferList.as_view(), name='offer-list'),
-    path('offers/<int:pk>/', OfferDetailView.as_view(), name='offer-detail'),
-    path('offer-details/', OfferDetailList.as_view(), name='offer-detail-list'),
+    path('offers/', views.OfferListAPIView.as_view()),
+    path('offers/<int:pk>/', views.OfferDetailsAPIView.as_view()),
+    path('offerdetails/<int:pk>/', views.OfferDetailDetailsAPIView.as_view(), name='offerdetails'),
 ]
+
 

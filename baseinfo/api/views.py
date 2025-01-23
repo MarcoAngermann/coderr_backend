@@ -5,7 +5,7 @@ from user_auth.models import Profile
 from offers.models import Offer 
 from django.db.models import Avg
 
-class PlatformStatsView(APIView):
+class BaseInfoViews(APIView):
     def get(self, request, *args, **kwargs):
         review_count = Review.objects.count()
         average_rating = Review.objects.aggregate(average_rating=Avg('rating'))['average_rating']

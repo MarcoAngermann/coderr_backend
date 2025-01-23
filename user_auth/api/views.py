@@ -27,24 +27,6 @@ class Registration(APIView):
             )
         return Response(register_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-# class Login(APIView):
-#     permission_classes = [AllowAny]
-#     def post(self, request):
-#         serializer= LoginSerializer(data=request.data)
-#         if serializer.is_valid():
-#             user = request.user
-#             token, created = Token.objects.get_or_create(user=user)
-#             data = {
-#                 "token": token.key,
-#                 "user_id": user.id,
-#                 "username": user.username,
-#                 "email": user.email
-#                 }
-            
-#             return Response(data, status=status.HTTP_200_OK)
-#         return Response({"error": ["Invalid credentials"]}, status=status.HTTP_400_BAD_REQUEST)
-
 class Login(APIView):
     permission_classes = [AllowAny]
     
@@ -89,7 +71,7 @@ class UserProfile(APIView):
 
 class BusinessProfiles(APIView):
     def get(self, request):
-        profiles = Profile.objects.filter(type='provider')
+        profiles = Profile.objects.filter(type='business')
         serializer = ProfileSerializer(profiles, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

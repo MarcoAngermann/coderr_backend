@@ -5,7 +5,7 @@ from django.utils.timezone import now
 class Profile(models.Model):
     USER_TYPES = (
         ('customer', 'Customer'),
-        ('provider', 'Provider'),
+        ('business', 'Business'),
     )
     
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')

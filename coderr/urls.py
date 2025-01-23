@@ -6,10 +6,10 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('user_auth.api.urls')),
-    path('api/offers/', include('offers.api.urls')),
-    path('api/orders/', include('orders.api.urls')),
-    path('api/reviews/', include('reviews.api.urls')),
-    path('api/platform/', include('platform_stats.api.urls')),
+    path('api/', include('offers.api.urls')),
+    path('api/', include('orders.api.urls')),
+    path('api/', include('reviews.api.urls')),
+    path('api/', include('baseinfo.api.urls')),
 ]
 
 if settings.DEBUG:
