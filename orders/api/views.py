@@ -8,7 +8,6 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.db.models import Q
 
-
 class OrdersListAPIView(APIView):
     permission_classes = [IsAuthenticated]
     pagination_class = None
@@ -32,18 +31,20 @@ class OrdersListAPIView(APIView):
         Creates a new order for the current user.
         """
         serializer = OrdersPostSerializer(data=request.data)
-        if self.request.user.profile.type is not 'customer':
-            return Response({'detail': ['Nur Kunden Können aufträge erteilen']}, status=status.HTTP_400_BAD_REQUEST)
+        if self.request.user.profile.type != 'customer':
+            return Response({'detail': ['Nur Kunden können Aufträge erteilen']}, status=status.HTTP_400_BAD_REQUEST)
         if serializer.is_valid():
-            serializer.save(customer_user=request.user.id)
+            serializer.save(customer_user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 class SingleOrderAPIView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    def get(self, request, pk, format=None):
+    def get(self, request, pk, format=None):  # Ändere `id` zu `pk`
         """
         Retrieves the order with the given primary key.
         """
@@ -51,7 +52,7 @@ class SingleOrderAPIView(APIView):
         serializer = OrdersListSerializer(order)
         return Response(serializer.data)
 
-    def patch(self, request, pk, format=None):
+    def patch(self, request, pk, format=None):  # Ändere `id` zu `pk`
         """
         Updates the order with the given primary key.
         """
@@ -59,7 +60,7 @@ class SingleOrderAPIView(APIView):
         is_company = order.business_user == request.user
         is_admin = request.user.is_staff
         if not (is_company or is_admin):
-            return Response({"detail": ["Sie sind nicht berechtigt, diese Bestellung zu ändern."]}, status=status.HTTP_403_FORBIDDEN )
+            return Response({"detail": ["Sie sind nicht berechtigt, diese Bestellung zu ändern."]}, status=status.HTTP_403_FORBIDDEN)
         serializer = OrderPatchSerializer(order, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -67,22 +68,21 @@ class SingleOrderAPIView(APIView):
             return Response(full_serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format=None):
+    def delete(self, request, pk, format=None):  # Ändere `id` zu `pk`
         """
         Deletes the order with the given primary key.
         """
-        if not (request.user.is_staff):
+        if not request.user.is_staff:
             return Response(
-                {"detail": ["Sie sind nicht berechtigt, diese Bestellung zu löschen."]},  status=status.HTTP_403_FORBIDDEN)
+                {"detail": ["Sie sind nicht berechtigt, diese Bestellung zu löschen."]}, status=status.HTTP_403_FORBIDDEN)
         order = get_object_or_404(Order, pk=pk)
         order.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
 class OrdersBusinessUncompletedCountAPIView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    def get(self, request, pk, format=None):
+    def get(self, request, pk, format=None):  # Ändere `id` zu `pk`
         """
         Retrieves the count of all uncompleted orders for a business user.
         """
@@ -93,13 +93,12 @@ class OrdersBusinessUncompletedCountAPIView(APIView):
         orders = Order.objects.filter(business_user=business_user, status='in_progress')
         return Response({"order_count": orders.count()})
 
-
 class OrdersBusinessCompletedCountAPIView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    def get(self, request, pk, format=None):
+    def get(self, request, pk, format=None):  # Ändere `id` zu `pk`
         """
-        Retrieves the count of all completed orders for a business user. 
+        Retrieves the count of all completed orders for a business user.
         """
         try:
             business_user = User.objects.get(pk=pk)
@@ -107,3 +106,6 @@ class OrdersBusinessCompletedCountAPIView(APIView):
             return Response({"detail": ["Diesen Business User gibt es nicht."]}, status=status.HTTP_404_NOT_FOUND)
         orders = Order.objects.filter(business_user=business_user, status='completed')
         return Response({"completed_order_count": orders.count()})
+
+
+
