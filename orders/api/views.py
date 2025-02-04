@@ -18,7 +18,7 @@ class OrdersListAPIView(APIView):
         """
         if request.user.is_authenticated:
             orders = Order.objects.filter(
-                Q(business_user=request.user.id) | Q(customer_user=request.user.id)
+                Q(business_user=request.user.id) or Q(customer_user=request.user.id)
             )
         else:
             orders = Order.objects.none()
@@ -44,7 +44,7 @@ class OrdersListAPIView(APIView):
 class SingleOrderAPIView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    def get(self, request, pk, format=None):  # Ändere `id` zu `pk`
+    def get(self, request, pk, format=None):  
         """
         Retrieves the order with the given primary key.
         """
@@ -52,7 +52,7 @@ class SingleOrderAPIView(APIView):
         serializer = OrdersListSerializer(order)
         return Response(serializer.data)
 
-    def patch(self, request, pk, format=None):  # Ändere `id` zu `pk`
+    def patch(self, request, pk, format=None): 
         """
         Updates the order with the given primary key.
         """

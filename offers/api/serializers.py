@@ -152,12 +152,6 @@ class OfferSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """
         Creates a new Offer instance with the given validated data and associated OfferDetails.
-
-        The validated data must include a 'validated_details' key containing a list of dictionaries,
-        each representing an OfferDetail to be associated with the Offer.
-        
-        :param validated_data: The validated data for the Offer, including 'validated_details'.
-        :return: The created Offer instance.
         """
 
         validated_details = validated_data.pop('validated_details', [])
