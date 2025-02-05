@@ -37,20 +37,20 @@ class ProfileDetailsAPIView(APIView):
         """
         Retrieves the profile details for a given primary key.
         """
-        profile = get_object_or_404(Profile, user__id=id)  # Ändere `pk` zu `user__id`
+        profile = get_object_or_404(Profile, user__id=id) 
         serializer = ProfileSerializer(profile)
         data = serializer.data
         data.pop('uploaded_at', None)
         return Response(data, status=status.HTTP_200_OK)
 
-    def patch(self, request, id, format=None):  # Ändere `pk` zu `id`
+    def patch(self, request, id, format=None):  
         """
         Updates allowed fields of a profile and includes the user in the response.
         """
-        profile = get_object_or_404(Profile, user__id=id)  # Ändere `pk` zu `user__id`
+        profile = get_object_or_404(Profile, user__id=id) 
         if profile.user != request.user:
             raise PermissionDenied("Sie haben keine Berechtigung, dieses Profil zu ändern.")
-        allowed_fields = {'email', 'first_name', 'last_name', 'file', 'location', 'description', 'working_hours', 'tel'}
+        allowed_fields = {'email', 'first_name', 'last_name', 'file', 'location', 'description', 'working_hours', 'tel', 'username'}
         invalid_fields = [key for key in request.data if key not in allowed_fields]
         if invalid_fields:
             return Response({"detail": [f"Die Felder {', '.join(invalid_fields)} sind nicht erlaubt."]}, status=status.HTTP_400_BAD_REQUEST)

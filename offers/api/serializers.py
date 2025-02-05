@@ -118,7 +118,7 @@ class OfferSerializer(serializers.ModelSerializer):
                 errors.append(detail_serializer.errors)
 
         if errors:
-            raise serializers.ValidationError({"details": [errors]})
+            raise serializers.ValidationError({"detail": [errors]})
         attrs['validated_details'] = [
             detail_serializer.validated_data for detail_serializer in 
             map(lambda d: OfferDetailSerializer(data=d), details_data) if detail_serializer.is_valid()
@@ -212,7 +212,7 @@ class SingleFullOfferDetailSerializer(serializers.ModelSerializer):
             if not detail_serializer.is_valid():
                 errors.append(detail_serializer.errors)
         if errors:
-            raise serializers.ValidationError({"details": [errors]})
+            raise serializers.ValidationError({"detail": [errors]})
         attrs['validated_details'] = [
             detail_serializer.validated_data for detail_serializer in 
             map(lambda d: OfferDetailSerializer(data=d), details_data) if detail_serializer.is_valid()

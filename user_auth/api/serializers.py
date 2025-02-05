@@ -118,9 +118,9 @@ class LoginSerializer(serializers.Serializer):
         password = data.get("password")
         user = User.objects.filter(username=username).first()
         if not user:
-            raise serializers.ValidationError({"details": ["Falsche Username oder Passwort."]})
+            raise serializers.ValidationError({"detail": ["Falsche Username oder Passwort."]})
         if not user.check_password(password):
-            raise serializers.ValidationError({"details": ["Falsche Username oder Passwort."]})
+            raise serializers.ValidationError({"detail": ["Falsche Username oder Passwort."]})
         token, created = Token.objects.get_or_create(user=user)
         data['user_id'] = user.id
         data['token'] = token.key

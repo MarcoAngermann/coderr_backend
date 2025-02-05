@@ -18,7 +18,7 @@ class Profile(models.Model):
     location = models.CharField(max_length=100, default = 'location')
     description = models.TextField(max_length=1000, default = '')
     working_hours = models.CharField(max_length=100, default = '8 - 16')
-    tel = models.CharField(max_length=100, default = '')
+    tel = models.CharField(max_length=100, default = '1234567890')
     uploaded_at = models.DateTimeField(auto_now=True)
     
     def save(self, *args, **kwargs):

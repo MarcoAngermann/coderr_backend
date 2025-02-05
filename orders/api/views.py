@@ -32,7 +32,7 @@ class OrdersListAPIView(APIView):
         """
         serializer = OrdersPostSerializer(data=request.data)
         if self.request.user.profile.type != 'customer':
-            return Response({'detail': ['Nur Kunden können Aufträge erteilen']}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': ['Nur Kunden können Aufträge erteilen']}, status=status.HTTP_403_FORBIDDEN)
         if serializer.is_valid():
             serializer.save(customer_user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -82,7 +82,7 @@ class SingleOrderAPIView(APIView):
 class OrdersBusinessUncompletedCountAPIView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    def get(self, request, pk, format=None):  # Ändere `id` zu `pk`
+    def get(self, request, pk, format=None): 
         """
         Retrieves the count of all uncompleted orders for a business user.
         """
@@ -96,7 +96,7 @@ class OrdersBusinessUncompletedCountAPIView(APIView):
 class OrdersBusinessCompletedCountAPIView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    def get(self, request, pk, format=None):  # Ändere `id` zu `pk`
+    def get(self, request, pk, format=None): 
         """
         Retrieves the count of all completed orders for a business user.
         """

@@ -21,7 +21,7 @@ from rest_framework.exceptions import PermissionDenied
 
 class BusinessProfileRequired(APIException):
     status_code = 403
-    default_detail = {"details": ["Nur Unternehmen können Angebote erstellen."]}
+    default_detail = {"detail": ["Nur Unternehmen können Angebote erstellen."]}
     default_code = "business_profile_required"
 
 
@@ -102,9 +102,9 @@ class OfferDetailsAPIView(RetrieveUpdateDestroyAPIView):
     def delete(self, request, pk, *args, **kwargs):
         offer = get_object_or_404(Offer, id=pk)
         if not (request.user == offer.user or request.user.is_staff):
-            raise PermissionDenied({"details": ["Nur der Besitzer oder ein Admin kann das Angebot löschen."], })
+            raise PermissionDenied({"detail": ["Nur der Besitzer oder ein Admin kann das Angebot löschen."], })
         if not (request.user.profile.type == 'business' or request.user.is_staff):
-            raise PermissionDenied({"details" : ["Nur ein Unternehmen kann ein Angebot löschen."], })
+            raise PermissionDenied({"detail" : ["Nur ein Unternehmen kann ein Angebot löschen."], })
         offer.delete()
         return Response({}, status=status.HTTP_200_OK)
     
