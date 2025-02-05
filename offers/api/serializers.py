@@ -48,8 +48,8 @@ class OfferDetailSerializer(serializers.ModelSerializer):
     def validate_revisions(self, value):
 
 
-        if value < -1:
-            raise serializers.ValidationError("Revisionen müssen -1 (unbegrenzt) oder eine positive Zahl sein.")
+        if value == 0 or value < -1:
+            raise serializers.ValidationError("Revisionen müssen -1 oder eine positive Zahl sein.")
         return value
 
     def validate_features(self, value):
@@ -118,7 +118,7 @@ class OfferSerializer(serializers.ModelSerializer):
                 errors.append(detail_serializer.errors)
 
         if errors:
-            raise serializers.ValidationError({"details": errors})
+            raise serializers.ValidationError({"details": [errors]})
         attrs['validated_details'] = [
             detail_serializer.validated_data for detail_serializer in 
             map(lambda d: OfferDetailSerializer(data=d), details_data) if detail_serializer.is_valid()
@@ -212,7 +212,7 @@ class SingleFullOfferDetailSerializer(serializers.ModelSerializer):
             if not detail_serializer.is_valid():
                 errors.append(detail_serializer.errors)
         if errors:
-            raise serializers.ValidationError({"details": errors})
+            raise serializers.ValidationError({"details": [errors]})
         attrs['validated_details'] = [
             detail_serializer.validated_data for detail_serializer in 
             map(lambda d: OfferDetailSerializer(data=d), details_data) if detail_serializer.is_valid()

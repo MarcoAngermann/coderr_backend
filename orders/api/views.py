@@ -18,8 +18,8 @@ class OrdersListAPIView(APIView):
         """
         if request.user.is_authenticated:
             orders = Order.objects.filter(
-                Q(business_user=request.user.id) or Q(customer_user=request.user.id)
-            )
+                Q(business_user=request.user.id) | Q(customer_user=request.user.id)
+        )
         else:
             orders = Order.objects.none()
 
